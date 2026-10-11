@@ -32,10 +32,11 @@
           placeholder="Тут появится текст..."
           rows="12"
           maxlength="100000"
+          readonly
         ></textarea>
         <div class="textarea-footer">
           <span id="charCount" class="char-count">0</span>
-          <span id="readonlyHint" class="readonly-hint hidden">
+          <span id="readonlyHint" class="readonly-hint">
             <span id="lockIcon"></span> Только чтение
           </span>
         </div>
@@ -46,13 +47,13 @@
           <span class="btn-icon" id="copyIcon"></span>
           <span class="btn-text">Копировать</span>
         </button>
+        <button id="editBtn" class="btn btn-secondary btn-icon-only hidden" title="Редактировать">
+          <span id="editIcon"></span>
+        </button>
         <button id="shareBtn" class="btn btn-secondary btn-icon-only" title="Поделиться">
           <span id="shareIcon"></span>
         </button>
-        <button id="clearBtn" class="btn btn-secondary btn-icon-only" title="Очистить">
-          <span id="clearIcon"></span>
-        </button>
-        <button id="deleteBtn" class="btn btn-danger btn-icon-only" title="Удалить комнату">
+        <button id="deleteBtn" class="btn btn-danger btn-icon-only hidden" title="Удалить комнату">
           <span id="deleteIcon"></span>
         </button>
       </div>
@@ -81,6 +82,6 @@
   <div id="toastContainer" class="toast-container"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
-  <script type="module" src="js/room.js"></script>
+  <script type="module" src="js/room.js?v=3"></script>
 </body>
 </html>
