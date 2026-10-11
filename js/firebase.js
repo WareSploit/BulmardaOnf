@@ -1,4 +1,3 @@
-// Firebase v10 модульный SDK через CDN
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import {
   getDatabase,
@@ -6,10 +5,10 @@ import {
   set,
   get,
   onValue,
+  onDisconnect,
   serverTimestamp,
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
-// 🔧 Реальный конфиг из Firebase Console
 const firebaseConfig = {
   apiKey: "AIzaSyAtcBdqOncoh_rCLsjVvCWcNDYshCZeAAw",
   authDomain: "clipsyns-ae937.firebaseapp.com",
@@ -23,4 +22,4 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 export const db = getDatabase(app);
 
-export { ref, set, get, onValue, serverTimestamp };
+export { ref, set, get, onValue, onDisconnect, serverTimestamp };
