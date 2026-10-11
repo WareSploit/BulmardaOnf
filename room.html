@@ -2,36 +2,71 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#0f1115" />
   <title>Комната — ClipSync</title>
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
+  <div class="bg-glow"></div>
+
+  <button id="themeToggle" class="theme-toggle" aria-label="Переключить тему"></button>
+
   <main class="container">
-    <header class="header">
-      <h1>📋 Комната <span id="roomCodeLabel">----</span></h1>
-      <p class="subtitle">Текст синхронизируется в реальном времени</p>
+    <header class="header animate-in">
+      <div class="room-header">
+        <a href="index.html" class="back-btn" title="На главную">
+          <span id="backIcon"></span>
+        </a>
+        <div>
+          <h1 class="room-title">Комната <span id="roomCodeLabel" class="room-code-inline">----</span></h1>
+          <div id="roleBadge" class="role-badge"></div>
+        </div>
+      </div>
     </header>
 
-    <section class="card">
-      <textarea
-        id="roomText"
-        placeholder="Тут появится текст..."
-        rows="10"
-      ></textarea>
+    <section class="card animate-in" style="--delay: 80ms">
+      <div class="textarea-wrap">
+        <textarea
+          id="roomText"
+          placeholder="Тут появится текст..."
+          rows="12"
+          maxlength="100000"
+        ></textarea>
+        <div class="textarea-footer">
+          <span id="charCount" class="char-count">0</span>
+          <span id="readonlyHint" class="readonly-hint hidden">
+            <span id="lockIcon"></span> Только чтение
+          </span>
+        </div>
+      </div>
 
       <div class="btn-row">
-        <button id="copyBtn" class="btn btn-primary">📄 Копировать</button>
-        <button id="clearBtn" class="btn btn-secondary">🗑 Очистить</button>
+        <button id="copyBtn" class="btn btn-primary btn-copy">
+          <span class="btn-icon" id="copyIcon"></span>
+          <span class="btn-text">Копировать</span>
+        </button>
+        <button id="shareBtn" class="btn btn-secondary btn-icon-only" title="Поделиться">
+          <span id="shareIcon"></span>
+        </button>
+        <button id="clearBtn" class="btn btn-secondary btn-icon-only" title="Очистить">
+          <span id="clearIcon"></span>
+        </button>
+        <button id="deleteBtn" class="btn btn-danger btn-icon-only" title="Удалить комнату">
+          <span id="deleteIcon"></span>
+        </button>
       </div>
 
       <p id="savedHint" class="hint"></p>
     </section>
 
-    <section class="card">
+    <section class="card animate-in" style="--delay: 160ms">
+      <p class="label">Поделиться ссылкой</p>
       <div class="link-row">
         <input id="roomLink" type="text" readonly />
-        <button id="copyLinkBtn" class="btn btn-secondary">Копировать ссылку</button>
+        <button id="copyLinkBtn" class="btn btn-icon-only btn-secondary" title="Копировать">
+          <span id="copyLinkIcon2"></span>
+        </button>
       </div>
       <div class="qr-wrap">
         <div id="qrcode"></div>
@@ -39,10 +74,11 @@
     </section>
 
     <footer class="footer">
-      <a href="index.html" class="link">← На главную</a>
       <span id="status" class="status">Подключение...</span>
     </footer>
   </main>
+
+  <div id="toastContainer" class="toast-container"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
   <script type="module" src="js/room.js"></script>
