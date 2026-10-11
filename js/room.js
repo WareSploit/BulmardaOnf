@@ -1,7 +1,7 @@
 import { db, ref, set, get, onValue } from "./firebase.js";
 import {
   copyToClipboard, setStatus, renderQR, icon, setIcon, toast,
-  isCreator, initTheme, toggleTheme,
+  isCreator, markCreator, initTheme, toggleTheme,
 } from "./utils.js";
 
 initTheme();
@@ -16,7 +16,16 @@ document.getElementById("lockIcon").innerHTML = icon("lock");
 
 const params = new URLSearchParams(location.search);
 const code = (params.get("r") || "").trim();
+const meParam = params.get("me") === "1";
 const MAX_SIZE = 100000;
+
+// ⚡ Если пришли с me=1 — принудительно ставим флаг создателя
+if (meParam && /^\d{4}$/.test(code)) {
+  markCreator(code);
+  // Чистим URL, чтобы при копировании ссылки другие не стали "создателями"
+  const clean = `${location.pathname}?r=${code}`;
+  history.replaceState({}, "", clean);
+}
 
 const roomCodeLabel = document.getElementById("roomCodeLabel");
 const roleBadge = document.getElementById("roleBadge");
@@ -53,7 +62,6 @@ function init() {
     roleBadge.innerHTML = `<span class="btn-icon">${icon("edit")}</span> Вы создатель — пишите текст`;
     roleBadge.classList.remove("reader");
     liveHint.classList.remove("hidden");
-    // textarea активна всегда
     roomText.removeAttribute("readonly");
     deleteBtn.classList.remove("hidden");
   } else {
@@ -70,7 +78,7 @@ function init() {
 
   const roomRef = ref(db, `rooms/${code}`);
 
-  // ---- Realtime-подписка ----
+  // Realtime-подписка
   onValue(
     roomRef,
     (snap) => {
@@ -90,7 +98,7 @@ function init() {
 
       const newText = data.text || "";
 
-      // Не перезаписываем textarea, пока создатель печатает
+      // Не перезаписываем то что создатель печатает
       if (!isTyping && roomText.value !== newText) {
         roomText.style.opacity = "0.5";
         roomText.value = newText;
@@ -105,7 +113,7 @@ function init() {
     }
   );
 
-  // ---- Автосохранение (только создатель) ----
+  // Автосохранение для создателя
   roomText.addEventListener("input", () => {
     updateCharCount();
     if (!isCreatorRole) return;
@@ -137,7 +145,6 @@ function init() {
     }, 500);
   });
 
-  // ---- Копировать ----
   copyBtn.addEventListener("click", async () => {
     if (!roomText.value) {
       toast("Нечего копировать", "error");
@@ -159,7 +166,6 @@ function init() {
     }
   });
 
-  // ---- Поделиться ----
   shareBtn.addEventListener("click", async () => {
     const url = roomLinkInput.value;
     if (navigator.share) {
@@ -172,7 +178,6 @@ function init() {
     }
   });
 
-  // ---- Удалить (только создатель) ----
   deleteBtn.addEventListener("click", async () => {
     if (!isCreatorRole) return;
     if (!confirm("Удалить комнату для всех? Действие необратимо.")) return;
@@ -185,14 +190,12 @@ function init() {
     }
   });
 
-  // ---- Копировать ссылку ----
   copyLinkBtn.addEventListener("click", async () => {
     const ok = await copyToClipboard(roomLinkInput.value);
     if (ok) toast("Ссылка скопирована", "success");
     else toast("Не удалось", "error");
   });
 
-  // ---- Автокопирование для читателя при входе ----
   if (!isCreatorRole) {
     setTimeout(async () => {
       const snap = await get(roomRef);
