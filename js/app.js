@@ -16,10 +16,11 @@ setIcon(document.getElementById("shareLinkIcon"), "share");
 setIcon(document.getElementById("openRoomIcon"), "eye");
 setIcon(document.getElementById("joinIcon"), "send");
 
-const textInput = document.getElementById("textInput");
-const charCount = document.getElementById("charCount");
+const roomNameInput = document.getElementById("roomNameInput");
+const nameCount = document.getElementById("nameCount");
 const createBtn = document.getElementById("createBtn");
 const resultCard = document.getElementById("resultCard");
+const resultName = document.getElementById("resultName");
 const roomCodeEl = document.getElementById("roomCode");
 const roomLinkInput = document.getElementById("roomLink");
 const copyLinkBtn = document.getElementById("copyLinkBtn");
@@ -29,13 +30,13 @@ const joinCodeInput = document.getElementById("joinCode");
 const joinBtn = document.getElementById("joinBtn");
 const statusEl = document.getElementById("status");
 
-const MAX_SIZE = 100000;
+const MAX_NAME = 60;
 
-textInput.addEventListener("input", () => {
-  const len = textInput.value.length;
-  charCount.textContent = `${len.toLocaleString("ru")} / ${MAX_SIZE.toLocaleString("ru")}`;
-  if (len > MAX_SIZE * 0.9) charCount.style.color = "var(--danger)";
-  else charCount.style.color = "";
+roomNameInput.addEventListener("input", () => {
+  const len = roomNameInput.value.length;
+  nameCount.textContent = `${len} / ${MAX_NAME}`;
+  if (len > MAX_NAME * 0.9) nameCount.style.color = "var(--danger)";
+  else nameCount.style.color = "";
 });
 
 joinCodeInput.addEventListener("input", () => {
@@ -52,15 +53,11 @@ async function pickFreeCode() {
 }
 
 async function createRoom() {
-  const text = textInput.value.trim();
-  if (!text) {
-    toast("Сначала введи текст", "error");
-    shake(textInput.parentElement);
-    textInput.focus();
-    return;
-  }
-  if (text.length > MAX_SIZE) {
-    toast("Текст слишком большой", "error");
+  const name = roomNameInput.value.trim();
+  if (!name) {
+    toast("Введи название комнаты", "error");
+    shake(roomNameInput.parentElement);
+    roomNameInput.focus();
     return;
   }
 
@@ -70,17 +67,18 @@ async function createRoom() {
   try {
     const code = await pickFreeCode();
     await set(ref(db, `rooms/${code}`), {
-      text,
+      name,
+      text: "",
       updatedAt: Date.now(),
       createdAt: Date.now(),
     });
 
-    // Запоминаем что мы создатель этой комнаты
     markCreator(code);
 
     const basePath = location.pathname.replace(/index\.html$/, "").replace(/\/$/, "");
     const link = `${location.origin}${basePath}/room.html?r=${code}`;
 
+    resultName.textContent = name;
     roomCodeEl.textContent = code;
     roomLinkInput.value = link;
     renderQR("qrcode", link);
@@ -91,7 +89,7 @@ async function createRoom() {
     resultCard.scrollIntoView({ behavior: "smooth", block: "start" });
   } catch (e) {
     console.error(e);
-    const msg = e.message?.includes("permission") ? "Нет доступа к базе (проверь Rules)" : e.message;
+    const msg = e.message?.includes("permission") ? "Нет доступа к базе" : e.message;
     setStatus(statusEl, "Ошибка", "err");
     toast("Ошибка: " + msg, "error", 4000);
   } finally {
@@ -101,27 +99,23 @@ async function createRoom() {
 
 copyLinkBtn.addEventListener("click", async () => {
   const ok = await copyToClipboard(roomLinkInput.value);
-  if (ok) toast("Ссылка скопирована", "success");
-  else toast("Не удалось скопировать", "error");
+  toast(ok ? "Ссылка скопирована" : "Не удалось", ok ? "success" : "error");
 });
 
 shareLinkBtn.addEventListener("click", async () => {
   const url = roomLinkInput.value;
   if (navigator.share) {
-    try {
-      await navigator.share({ title: "ClipSync", text: "Забери текст по ссылке", url });
-    } catch {}
+    try { await navigator.share({ title: "ClipSync", text: "Забери текст", url }); } catch {}
   } else {
     await copyToClipboard(url);
     toast("Ссылка скопирована", "success");
   }
 });
 
-// ⚡ ГЛАВНОЕ: открываем комнату с пометкой me=1 — это гарантирует режим создателя
 openRoomBtn.addEventListener("click", () => {
   const code = roomCodeEl.textContent.trim();
   if (code && code !== "----") {
-    markCreator(code); // дублируем в localStorage
+    markCreator(code);
     location.href = `room.html?r=${code}&me=1`;
   }
 });
@@ -133,7 +127,6 @@ joinBtn.addEventListener("click", () => {
     shake(joinCodeInput);
     return;
   }
-  // Если это наша комната — идём как создатель
   const weOwnIt = (() => {
     try { return localStorage.getItem(`creator:${code}`) === "1"; } catch { return false; }
   })();
@@ -146,6 +139,6 @@ joinCodeInput.addEventListener("keydown", (e) => {
 
 createBtn.addEventListener("click", createRoom);
 
-textInput.addEventListener("keydown", (e) => {
-  if ((e.ctrlKey || e.metaKey) && e.key === "Enter") createRoom();
+roomNameInput.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") createRoom();
 });
