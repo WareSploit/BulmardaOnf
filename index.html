@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ClipSync — быстрый обмен текстом</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <main class="container">
+    <header class="header">
+      <h1>📋 ClipSync</h1>
+      <p class="subtitle">Кинь текст с телефона — забери на ПК</p>
+    </header>
+
+    <section class="card">
+      <textarea
+        id="textInput"
+        placeholder="Вставь или напиши текст..."
+        rows="6"
+      ></textarea>
+
+      <button id="createBtn" class="btn btn-primary">
+        Создать комнату
+      </button>
+    </section>
+
+    <section id="resultCard" class="card hidden">
+      <p class="label">Код комнаты:</p>
+      <div id="roomCode" class="room-code">----</div>
+
+      <p class="label">Ссылка:</p>
+      <div class="link-row">
+        <input id="roomLink" type="text" readonly />
+        <button id="copyLinkBtn" class="btn btn-secondary">Копировать</button>
+      </div>
+
+      <div class="qr-wrap">
+        <div id="qrcode"></div>
+        <p class="hint">Отсканируй с другого устройства</p>
+      </div>
+
+      <button id="openRoomBtn" class="btn btn-primary">
+        Открыть комнату
+      </button>
+    </section>
+
+    <section class="card">
+      <p class="label">Или войти по коду:</p>
+      <div class="link-row">
+        <input id="joinCode" type="text" placeholder="4821" maxlength="4" inputmode="numeric" />
+        <button id="joinBtn" class="btn btn-secondary">Войти</button>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <span id="status">Готов</span>
+    </footer>
+  </main>
+
+  <!-- QR-генератор (лёгкий, без зависимостей) -->
+  <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

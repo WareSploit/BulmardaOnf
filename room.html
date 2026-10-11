@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Комната — ClipSync</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <main class="container">
+    <header class="header">
+      <h1>📋 Комната <span id="roomCodeLabel">----</span></h1>
+      <p class="subtitle">Текст синхронизируется в реальном времени</p>
+    </header>
+
+    <section class="card">
+      <textarea
+        id="roomText"
+        placeholder="Тут появится текст..."
+        rows="10"
+      ></textarea>
+
+      <div class="btn-row">
+        <button id="copyBtn" class="btn btn-primary">📄 Копировать</button>
+        <button id="clearBtn" class="btn btn-secondary">🗑 Очистить</button>
+      </div>
+
+      <p id="savedHint" class="hint"></p>
+    </section>
+
+    <section class="card">
+      <div class="link-row">
+        <input id="roomLink" type="text" readonly />
+        <button id="copyLinkBtn" class="btn btn-secondary">Копировать ссылку</button>
+      </div>
+      <div class="qr-wrap">
+        <div id="qrcode"></div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <a href="index.html" class="link">← На главную</a>
+      <span id="status" class="status">Подключение...</span>
+    </footer>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+  <script type="module" src="js/room.js"></script>
+</body>
+</html>
