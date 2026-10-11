@@ -16,6 +16,9 @@ export const icons = {
   edit: _svg(`<path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>`),
   eye: _svg(`<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>`),
   send: _svg(`<line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>`),
+  users: _svg(`<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>`),
+  userMinus: _svg(`<path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="17" y1="11" x2="23" y2="11"/>`),
+  crown: _svg(`<path d="M2 20h20M4 20l1-10 5 4 3-8 3 8 5-4 1 10"/>`),
 };
 
 export function icon(name) { return icons[name] || ""; }
@@ -121,4 +124,14 @@ export function shake(el) {
   if (!el) return;
   el.classList.add("shake");
   setTimeout(() => el.classList.remove("shake"), 500);
+}
+
+// Уникальный ID вкладки (живёт пока открыта вкладка)
+export function getSessionId() {
+  let sid = sessionStorage.getItem("clipsync:sid");
+  if (!sid) {
+    sid = Math.random().toString(36).slice(2, 10);
+    sessionStorage.setItem("clipsync:sid", sid);
+  }
+  return sid;
 }
