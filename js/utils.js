@@ -126,7 +126,6 @@ export function shake(el) {
   setTimeout(() => el.classList.remove("shake"), 500);
 }
 
-// Уникальный ID вкладки (живёт пока открыта вкладка)
 export function getSessionId() {
   let sid = sessionStorage.getItem("clipsync:sid");
   if (!sid) {
