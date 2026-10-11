@@ -23,15 +23,16 @@
     </header>
 
     <section class="card animate-in" style="--delay: 80ms">
+      <p class="label">Название комнаты</p>
       <div class="textarea-wrap">
-        <textarea
-          id="textInput"
-          placeholder="Вставь или напиши текст..."
-          rows="6"
-          maxlength="100000"
-        ></textarea>
+        <input
+          id="roomNameInput"
+          type="text"
+          placeholder="Например: Заметки, ссылки, код..."
+          maxlength="60"
+        />
         <div class="textarea-footer">
-          <span id="charCount" class="char-count">0 / 100 000</span>
+          <span id="nameCount" class="char-count">0 / 60</span>
         </div>
       </div>
 
@@ -46,6 +47,9 @@
         <span class="success-icon" id="successIcon"></span>
         <span>Комната создана</span>
       </div>
+
+      <p class="label">Название</p>
+      <div id="resultName" class="result-name">—</div>
 
       <p class="label">Код комнаты</p>
       <div id="roomCode" class="room-code">----</div>
@@ -91,6 +95,6 @@
   <div id="toastContainer" class="toast-container"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
-  <script type="module" src="js/app.js?v=4"></script>
+  <script type="module" src="js/app.js?v=6"></script>
 </body>
 </html>
