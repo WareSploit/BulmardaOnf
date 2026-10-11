@@ -18,18 +18,36 @@
         <a href="index.html" class="back-btn" title="На главную">
           <span id="backIcon"></span>
         </a>
-        <div>
-          <h1 class="room-title">Комната <span id="roomCodeLabel" class="room-code-inline">----</span></h1>
-          <div id="roleBadge" class="role-badge"></div>
+        <div class="room-title-block">
+          <h1 class="room-title" id="roomNameLabel">Комната</h1>
+          <div class="room-meta">
+            <span class="room-code-inline" id="roomCodeLabel">----</span>
+            <div id="roleBadge" class="role-badge"></div>
+          </div>
         </div>
+        <button id="usersToggle" class="users-toggle" title="Участники">
+          <span id="usersIcon"></span>
+          <span id="usersCount">1</span>
+        </button>
       </div>
     </header>
+
+    <div id="usersPanel" class="users-panel hidden">
+      <div class="users-panel-header">
+        <span>Участники</span>
+        <button id="usersClose" class="icon-close" aria-label="Закрыть">
+          <span id="usersCloseIcon"></span>
+        </button>
+      </div>
+      <div id="usersList" class="users-list"></div>
+      <p class="users-hint" id="usersHint">Кик — только для создателя</p>
+    </div>
 
     <section class="card animate-in" style="--delay: 80ms">
       <div class="textarea-wrap">
         <textarea
           id="roomText"
-          placeholder="Тут появится текст..."
+          placeholder="Создатель печатает здесь..."
           rows="12"
           maxlength="100000"
         ></textarea>
@@ -81,6 +99,6 @@
   <div id="toastContainer" class="toast-container"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
-  <script type="module" src="js/room.js?v=4"></script>
+  <script type="module" src="js/room.js?v=6"></script>
 </body>
 </html>
