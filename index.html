@@ -2,37 +2,63 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ClipSync — быстрый обмен текстом</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#0f1115" />
+  <meta name="description" content="ClipSync — быстрый обмен текстом между устройствами" />
+  <title>ClipSync — обмен текстом</title>
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
+  <div class="bg-glow"></div>
+
+  <button id="themeToggle" class="theme-toggle" aria-label="Переключить тему"></button>
+
   <main class="container">
-    <header class="header">
-      <h1>📋 ClipSync</h1>
+    <header class="header animate-in">
+      <div class="logo">
+        <span class="logo-icon" id="logoIcon"></span>
+        <h1>ClipSync</h1>
+      </div>
       <p class="subtitle">Кинь текст с телефона — забери на ПК</p>
     </header>
 
-    <section class="card">
-      <textarea
-        id="textInput"
-        placeholder="Вставь или напиши текст..."
-        rows="6"
-      ></textarea>
+    <section class="card animate-in" style="--delay: 80ms">
+      <div class="textarea-wrap">
+        <textarea
+          id="textInput"
+          placeholder="Вставь или напиши текст..."
+          rows="6"
+          maxlength="100000"
+        ></textarea>
+        <div class="textarea-footer">
+          <span id="charCount" class="char-count">0 / 100 000</span>
+        </div>
+      </div>
 
-      <button id="createBtn" class="btn btn-primary">
-        Создать комнату
+      <button id="createBtn" class="btn btn-primary btn-glow">
+        <span class="btn-icon" id="createIcon"></span>
+        <span>Создать комнату</span>
       </button>
     </section>
 
-    <section id="resultCard" class="card hidden">
-      <p class="label">Код комнаты:</p>
+    <section id="resultCard" class="card card-result hidden">
+      <div class="success-badge">
+        <span class="success-icon" id="successIcon"></span>
+        <span>Комната создана</span>
+      </div>
+
+      <p class="label">Код комнаты</p>
       <div id="roomCode" class="room-code">----</div>
 
-      <p class="label">Ссылка:</p>
+      <p class="label">Ссылка</p>
       <div class="link-row">
         <input id="roomLink" type="text" readonly />
-        <button id="copyLinkBtn" class="btn btn-secondary">Копировать</button>
+        <button id="copyLinkBtn" class="btn btn-icon-only btn-secondary" title="Копировать">
+          <span id="copyLinkIcon"></span>
+        </button>
+        <button id="shareLinkBtn" class="btn btn-icon-only btn-secondary" title="Поделиться">
+          <span id="shareLinkIcon"></span>
+        </button>
       </div>
 
       <div class="qr-wrap">
@@ -41,26 +67,30 @@
       </div>
 
       <button id="openRoomBtn" class="btn btn-primary">
-        Открыть комнату
+        <span class="btn-icon" id="openRoomIcon"></span>
+        <span>Открыть комнату</span>
       </button>
     </section>
 
-    <section class="card">
-      <p class="label">Или войти по коду:</p>
+    <section class="card animate-in" style="--delay: 160ms">
+      <p class="label">Или войти по коду</p>
       <div class="link-row">
-        <input id="joinCode" type="text" placeholder="4821" maxlength="4" inputmode="numeric" />
-        <button id="joinBtn" class="btn btn-secondary">Войти</button>
+        <input id="joinCode" type="text" placeholder="0000" maxlength="4" inputmode="numeric" pattern="[0-9]*" />
+        <button id="joinBtn" class="btn btn-secondary">
+          <span class="btn-icon" id="joinIcon"></span>
+          <span>Войти</span>
+        </button>
       </div>
     </section>
 
     <footer class="footer">
-      <span id="status">Готов</span>
+      <span id="status" class="status">Готов к работе</span>
     </footer>
   </main>
 
-  <!-- QR-генератор (лёгкий, без зависимостей) -->
-  <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+  <div id="toastContainer" class="toast-container"></div>
 
+  <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
   <script type="module" src="js/app.js"></script>
 </body>
 </html>
