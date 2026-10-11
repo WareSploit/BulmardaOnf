@@ -75,6 +75,7 @@ async function createRoom() {
       createdAt: Date.now(),
     });
 
+    // Запоминаем что мы создатель этой комнаты
     markCreator(code);
 
     const basePath = location.pathname.replace(/index\.html$/, "").replace(/\/$/, "");
@@ -116,9 +117,13 @@ shareLinkBtn.addEventListener("click", async () => {
   }
 });
 
+// ⚡ ГЛАВНОЕ: открываем комнату с пометкой me=1 — это гарантирует режим создателя
 openRoomBtn.addEventListener("click", () => {
   const code = roomCodeEl.textContent.trim();
-  if (code && code !== "----") location.href = `room.html?r=${code}`;
+  if (code && code !== "----") {
+    markCreator(code); // дублируем в localStorage
+    location.href = `room.html?r=${code}&me=1`;
+  }
 });
 
 joinBtn.addEventListener("click", () => {
@@ -128,7 +133,11 @@ joinBtn.addEventListener("click", () => {
     shake(joinCodeInput);
     return;
   }
-  location.href = `room.html?r=${code}`;
+  // Если это наша комната — идём как создатель
+  const weOwnIt = (() => {
+    try { return localStorage.getItem(`creator:${code}`) === "1"; } catch { return false; }
+  })();
+  location.href = weOwnIt ? `room.html?r=${code}&me=1` : `room.html?r=${code}`;
 });
 
 joinCodeInput.addEventListener("keydown", (e) => {
